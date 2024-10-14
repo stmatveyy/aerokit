@@ -35,13 +35,8 @@ jobs:
           
       - name: Starting service
         run: |
-          screen -s uvicorn
           pipenv run uvicorn src.backend.python.app.main:app --port 8080
-          screen -s streamlit
-          screen -r streamlit
           pipenv run streamlit run src/frontend/app/main.py
-          screen -s main
-          screen -r main
           
       - name: Running frontend & backend tests
         run: pytest
