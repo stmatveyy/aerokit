@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+
+  database:
+    image: postgres:14.1-alpine
+    env_file:
+      - dockerenvs/database.env
+    container_name: POSTGRES
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./src/backend/python
+    restart: always
+    depends_on:
+      - database
+    networks:
+      - yet_another_network
+    env_file: 
+      - dockerenvs/backend.env
+    command: >
+      /bin/sh -c "echo db fill placeholder ; exit 0"
+    container_name: PY_BACKEND
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./src/frontend/python
+    depends_on:
+      - backend
+    env_file:
+      - dockerenvs/frontend.env
+    networks:
+      - yet_another_network
+    container_name: PY_FRONTEND
+    ports:
+      - "8501:8501"
+
+networks:
+  yet_another_network:
+   driver: bridge
+
+volumes:
+  postgres_data:
