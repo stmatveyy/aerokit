@@ -21,10 +21,12 @@ services:
     env_file: 
       - dockerenvs/backend.env
     command: >
-      /bin/sh -c "echo db fill placeholder ; exit 0"
+      /bin/sh -c "echo db fill placeholder ; 
+      pipenv run uvicorn main:app --reload --port 8080"
     container_name: PY_BACKEND
     ports:
       - "8080:8080"
+    
 
   frontend:
     build: ./src/frontend/python
@@ -37,6 +39,8 @@ services:
     container_name: PY_FRONTEND
     ports:
       - "8501:8501"
+    command: >
+      /bin/sh -c "pipenv run streamlit run main.py"
 
 networks:
   yet_another_network:

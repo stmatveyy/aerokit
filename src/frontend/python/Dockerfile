@@ -1,11 +1,12 @@
-FROM baseImage
+FROM python:3.12.6
 
 WORKDIR /app
 RUN pip install pipenv
+COPY ./Pipfile ./Pipfile
 RUN pipenv install
 
 COPY /app .
-RUN pipenv shell
 
-ENTRYPOINT ["streamlit", "run", "src/frontend/app/main.py"]
+
+
 
