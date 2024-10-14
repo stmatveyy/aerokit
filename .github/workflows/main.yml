@@ -31,14 +31,15 @@ jobs:
       - name: Collecting depencies
         run: | 
           pip install pipenv
-          pipenv install --dev;
+          pipenv install 
+          pipenv install pytest;
           
       - name: Starting service
         run: |
           nohup pipenv run uvicorn src.backend.python.app.main:app --port 8080 &
           echo "Waiting for uvicorn to start..."
           sleep 5
-          nohup pipenv run streamlit run src/frontend/app/main.py &
+          nohup pipenv run streamlit run src/frontend/python/app/main.py &
           echo "Waiting for stramlit to start"
           sleep 8
           
