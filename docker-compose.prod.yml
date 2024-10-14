@@ -18,15 +18,15 @@ services:
       - database
     networks:
       - yet_another_network
-    env_file: 
+    env_file:
       - dockerenvs/backend.env
     command: >
-      /bin/sh -c "echo db fill placeholder ; 
-      pipenv run uvicorn main:app --reload --port 8080"
+      /bin/sh -c "echo db fill placeholder ;
+      pipenv run uvicorn main:app --reload --port 8080; exit 0"
     container_name: PY_BACKEND
     ports:
       - "8080:8080"
-    
+
 
   frontend:
     build: ./src/frontend/python
@@ -40,11 +40,11 @@ services:
     ports:
       - "8501:8501"
     command: >
-      /bin/sh -c "pipenv run streamlit run main.py"
+      /bin/sh -c "pipenv run streamlit run main.py; exit 0"
 
 networks:
   yet_another_network:
-   driver: bridge
+    driver: bridge
 
 volumes:
   postgres_data:
