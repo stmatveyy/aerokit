@@ -35,12 +35,12 @@ jobs:
           
       - name: Starting service
         run: |
-          nohup pipenv run uvicorn src.backend.python.app.main:app --port 8080
+          nohup pipenv run uvicorn src.backend.python.app.main:app --port 8080 &
           echo "Waiting for uvicorn to start..."
-          wait(5)
-          nohup pipenv run streamlit run src/frontend/app/main.py
+          sleep 5
+          nohup pipenv run streamlit run src/frontend/app/main.py &
           echo "Waiting for stramlit to start"
-          wait(8)
+          sleep 8
           
       - name: Running frontend & backend tests
         run: pytest
