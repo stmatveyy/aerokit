@@ -6,10 +6,50 @@ on:
     branches: ["main"]
     
 jobs:
-  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Lint .py files
+        uses: py-actions/flake8@v2.3.0
+        with:
+          path: ./src
+          
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setting up python
+        uses: actions/setup-python@v5.2.0
+        with:
+          python-version: 3.12
+          
+      - name: Collecting depencies
+        run: | 
+          pip install pipenv
+          pipenv install --dev;
+          
+      - name: Starting service
+        run: |
+          screen -s uvicorn
+          pipenv run uvicorn src.backend.python.app.main:app --port 8080
+          screen -s streamlit
+          screen -r streamlit
+          pipenv run streamlit run src/frontend/app/main.py
+          screen -s main
+          screen -r main
+          
+      - name: Running frontend & backend tests
+        run: pytest
+          
   deploy:
     
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
